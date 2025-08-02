@@ -1,30 +1,73 @@
 plugins {
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
-	id 'java'
+    // Core plugins for a Spring Boot application
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    
+    // SonarQube analysis plugin
     id "org.sonarqube" version "5.1.0.4882"
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	sourceCompatibility = '17'
-}
+group = 'ch.appuio.techlab'
+version = '0.1.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+// Customize the generated JAR file name
+bootJar {
+    archiveBaseName = 'springboots2idemo'
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // --- Spring Boot Starters ---
+    // Core Spring Boot functionality
+    implementation 'org.springframework.boot:spring-boot-starter'
+    // RESTful web services
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Database access via JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Health checks and monitoring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // JDBC for database connections
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    // Validation annotations (e.g., @NotNull, @Size)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // --- Other Dependencies ---
+    // Database migration tool
+    implementation 'org.liquibase:liquibase-core'
+    // Prometheus registry for Actuator metrics
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    // JAXB for XML binding (used for @XmlRootElement)
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+    // --- Database Drivers ---
+    // In-memory database for development/testing
+    implementation 'com.h2database:h2'
+    // MySQL and PostgreSQL drivers
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.postgresql:postgresql'
+
+    // --- Testing Dependencies ---
+    // Spring Boot test starter
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Exclude vintage engine for JUnit 4 compatibility if needed
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    // Explicitly add JUnit 4 for compatibility
+    testImplementation 'junit:junit:4.13.2'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
+// SonarQube configuration
 sonarqube {
     properties {
         property "sonar.projectKey", "testspring"
